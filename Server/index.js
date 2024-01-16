@@ -2,7 +2,8 @@
 import dataBase from './Database/db.js'
 import express from 'express';
 import dotenv from 'dotenv';
-import getBlog from './Route/userDetail.js'
+import getUser from './Route/userDetail.js'
+import getTask from './Route/Task.js'
 dotenv.config();
 
 
@@ -13,8 +14,8 @@ app.use(express.json())
 
 // Retrieve blog post including category and everything
 
-app.use('/', getBlog)
-
+app.use('/', getUser)
+app.use('/', getTask)
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)

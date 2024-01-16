@@ -1,9 +1,25 @@
-function checkapiKey(req,res,next){
-    const apikey = req.get('x-api-key')
-    const server_api_Key = process.env.JWT_SECRET_KEY
-    if(server_api_Key!==apikey){
-        return res.send('invalidUser')
+import jwt from 'jsonwebtoken';
+
+function checkApiKey(req, res, next) {
+    const apiKey = req.get('Authorization');
+
+    if (!apiKey) {
+        return res.status(401).send('API Key is missing');
     }
-    next()
+
+    const serverApiKey = process.env.JWT_SECRET_KEY;
+
+    jwt.verify(apiKey, serverApiKey, (err, decoded) => {
+        if (err) {
+            console.error('JWT Verification Error:', err);
+            return res.status(401).send('Invalid API Key');
+        }
+
+        // Store the decoded information in the request object
+        req.user = decoded;
+
+        next();
+    });
 }
-export default checkapiKey
+
+export default checkApiKey;
