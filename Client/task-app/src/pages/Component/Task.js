@@ -1,0 +1,324 @@
+import React, { useEffect, useState } from 'react'
+import Style from '@/styles/Task.module.css';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import TextField from '@mui/material/TextField';
+// import Box from '@mui/material/Box';
+import {count} from '../Redux/Action/index.js'
+import { useSelector } from 'react-redux';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
+function Task() {
+    const User_Access_Token = useSelector(state => state.accessToken);
+    const user_Name = useSelector(state => state.userName);
+
+    const tasks = [
+        {
+            id: 1,
+            taskName: 'React Project',
+            description: 'Working on task application for resume',
+            status: 'Work In Progess',
+            lastUpdated: '2023-03-12',
+        },
+        {
+            id: 2,
+            taskName: 'Node.js Backend',
+            description: 'Setting up server and API endpoints',
+            status: 'Work In Progess',
+            lastUpdated: '2023-03-15',
+        },
+        {
+            id: 3,
+            taskName: 'Design Mockups',
+            description: 'Creating UI mockups for user feedback',
+            status: 'Work In Progess',
+            lastUpdated: '2023-03-18',
+        },
+        {
+            id: 4,
+            taskName: 'Write Documentation',
+            description: 'Documenting project features and usage',
+            status: 'Work In Progess',
+            lastUpdated: '2023-03-20',
+        },
+        {
+            id: 5,
+            taskName: 'Testing Phase',
+            description: 'Conducting comprehensive testing for bug detection',
+            status: 'Work In Progess',
+            lastUpdated: '2023-03-25',
+        }
+    ];
+    const [listArr, setListArr] = useState(tasks.slice())
+    const [ListOf_Item,set_ListOf_Item]=useState([])
+    const [selectedDelete, setselectedDelete] = useState([])
+    const Checkbox_ID_Selected = (e) => {
+        if (!selectedDelete.includes(e)) {
+            console.log('add')
+            setselectedDelete((prevSelected) => [...prevSelected, e]);
+        } else {
+            console.log('remove')
+            let update = selectedDelete.filter((element) => element !== e)
+            setselectedDelete(update);
+        }
+    };
+    useEffect(() => {
+        fetch(`http://localhost:4000/allTask`,{
+            method:"GET",
+            headers:{
+                "Authorization":User_Access_Token
+            }
+        })
+        .then(response => response.json())
+            .then(result => set_ListOf_Item(result))
+            .catch(error => console.log('error', error));
+    }, [])
+    console.log(selectedDelete)
+    const deleteTask = () => {
+        if (listArr.length !== 0) {
+            const updateList = listArr.filter((element) => !selectedDelete.includes(element.id))
+            setListArr(updateList)
+        }
+    }
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        borderRadius: '20px',
+        boxShadow: 24,
+        p: 4,
+    };
+    const [taskName, setTaskName] = useState('')
+    const [taskDesc, settaskDesc] = useState('')
+    const [status, setStatus] = useState('');
+
+    const handle_Status_Change = (event) => {
+        setStatus(event.target.value);
+    };
+    const EditSelected = () => {
+        if (selectedDelete.length == 1) {
+            for (let i = 0; i < listArr.length; i++) {
+                if (listArr[i].id === selectedDelete[0]) {
+                    handleOpen()
+                    setTaskName(listArr[i].taskName)
+                    settaskDesc(listArr[i].description)
+                    setStatus(listArr[i].status)
+                    break;
+                }
+            }
+        }
+        else {
+            handleOpenErrorMessage()
+        }
+    }
+    const On_Edit_Save = () => {
+        for (let i = 0; i < listArr.length; i++) {
+            if (listArr[i].id === selectedDelete[0]) {
+                listArr[i].taskName = taskName
+                listArr[i].description = taskDesc
+                listArr[i].status = status
+                handleClose()
+                console.log(listArr)
+                break;
+            }
+        }
+    }
+
+    const [openErrorMessage, setopenErrorMessage] = React.useState(false);
+    const handleOpenErrorMessage = () => setopenErrorMessage(true);
+    const handleCloseErrorMessage = () => setopenErrorMessage(false);
+    const errorStyle = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        boxShadow: 24,
+        p: 4,
+    }
+    const taskNameChange = (e) => {
+        setTaskName(e.target.value)
+    }
+    const taskDescChange = (e) => {
+        settaskDesc(e.target.value)
+    }
+
+    const [CreateTaskName, setCreateTaskName] = useState('')
+    const [CreateTaskDesc, setCreateTaskDesc] = useState('')
+    const [openCreateTask, setOpenCreateTask] = React.useState(false);
+    const CreateTaskOpen = () => setOpenCreateTask(true);
+    const CreateTaskClose = () => setOpenCreateTask(false);
+
+    const Create_taskName = (e) => {
+        setCreateTaskName(e.target.value)
+    }
+    const Create_taskDesc = (e) => {
+        setCreateTaskDesc(e.target.value)
+    }
+    const [createStatus, setCreateStatus] = useState('Work In Progess')
+    const Create_Task_status = (event) => {
+        setCreateStatus(event.target.value);
+    };
+    const on_create_task = () => {
+        const id = listArr.length + 1
+        const data = {
+            id: id,
+            taskName: CreateTaskName,
+            description: CreateTaskDesc,
+            status: createStatus,
+            lastUpdated: new Date().toDateString(),
+        }
+        fetch('http://localhost:4000/createTask',{
+            method:"POST",
+            headers:{
+                "Authorization":User_Access_Token,
+                "Content-Type":"application/json"
+            }
+        })
+        CreateTaskClose()
+        setListArr((prevSelected) => [...prevSelected, data])
+    }
+    return (
+        <div style={{ padding: '2rem', background: 'linen', height: '90vh' }} >
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                    <h2>Hey {user_Name.slice(0,1).toUpperCase()+user_Name.slice(1)}👋, Here are your list of task</h2>
+                </div>
+                <div>
+                    <button onClick={CreateTaskOpen} className={Style.newTask}>New task</button>
+                </div>
+            </div>
+            <div style={{ display: 'flex', gap: '15px', justifyContent: 'flex-end', margin: "40px 50px 10px 0px" }}>
+                <div style={{ display: 'flex', alignItems: 'center', padding: '5px' }}><button className={Style.edit_task_button} onClick={() => EditSelected()}><EditIcon /> Edit</button></div>
+                <div style={{ display: 'flex', alignItems: 'center', padding: '5px' }}><button className={Style.delete_task_button} onClick={() => deleteTask()}><DeleteIcon /> Delete</button></div>
+            </div>
+            <div className={Style.task_div}>
+                <div className={Style.task_Main_div}>
+                    <div className={Style.list_Task}><input type="checkbox" />Id</div>
+                    <div className={Style.list_Task}>Task Name</div>
+                    <div className={Style.list_Task}>Task Description</div>
+                    <div className={Style.list_Task}>Status</div>
+                    <div className={Style.list_Task}>last Updated</div>
+
+                </div>
+                <div>
+                    {ListOf_Item.map((element, i) => (
+                        <div className={Style.task_row_div} key={i}>
+                            <div className={Style.list_Task}><input type="checkbox" onChange={() => Checkbox_ID_Selected(element.id)} />{element.id}</div>
+                            <div className={Style.list_Task}>{element.taskName}</div>
+                            <div className={Style.list_Task}>{element.taskDesc}</div>
+                            <div className={Style.list_Task} ><span style={{ background: 'red', padding: '5px 10px', borderRadius: '20px', fontSize: '12px' }}>{element.status}</span></div>
+                            <div className={Style.list_Task}>{element.lastUpdated}</div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+            <div>
+                {/* <Button onClick={handleOpen}>Open modal</Button> */}
+                <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={style}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            Please update your necessary field
+                        </Typography>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '20px' }}>
+                            <TextField id="outlined-basic" defaultValue={taskName} onChange={(e) => taskNameChange(e)} label="Task Name" variant="outlined" />
+                            <TextField id="outlined-basic" defaultValue={taskDesc} onChange={(e) => taskDescChange(e)} label="Task Description" variant="outlined" />
+                            <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={status}
+                                    label="Status"
+                                    onChange={handle_Status_Change}
+                                >
+                                    <MenuItem value={'Work In Progess'}>Work In Progess</MenuItem>
+                                    <MenuItem value={'Testing'}>Testing</MenuItem>
+                                    <MenuItem value={'In Production'}>In Production</MenuItem>
+                                </Select>
+                            </FormControl>
+                            <button className={Style.Save_buttton} onClick={() => On_Edit_Save()}>Save</button>
+                        </div>
+                    </Box>
+                </Modal>
+            </div>
+
+            <div>
+                {/* <Button onClick={CreateTaskOpen}>Open modal</Button> */}
+                <Modal
+                    open={openCreateTask}
+                    onClose={CreateTaskClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={style}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            Please provide necessary details
+                        </Typography>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '20px' }}>
+                            <TextField id="outlined-basic" onChange={(e) => Create_taskName(e)} label="Please enter Task Name" variant="outlined" />
+                            <TextField id="outlined-basic" onChange={(e) => Create_taskDesc(e)} label="Please enter Task Description" variant="outlined" />
+                            <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={createStatus}
+                                    label="Status"
+                                    onChange={Create_Task_status}
+                                >
+                                    <MenuItem value={'Work In Progess'}>Work In Progess</MenuItem>
+                                    <MenuItem value={'Testing'}>Testing</MenuItem>
+                                    <MenuItem value={'In Production'}>In Production</MenuItem>
+                                </Select>
+                            </FormControl>
+                            <button className={Style.Save_buttton} onClick={() => on_create_task()}>Create Task</button>
+                        </div>
+                    </Box>
+                </Modal>
+            </div>
+
+            <div>
+                <Modal
+                    open={openErrorMessage}
+                    onClose={handleCloseErrorMessage}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={errorStyle}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            Error Message
+                        </Typography>
+                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            Please select only one field while Editing task
+                        </Typography>
+                    </Box>
+                </Modal>
+            </div>
+        </div>
+
+    )
+}
+
+export default Task

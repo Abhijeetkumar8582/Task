@@ -1,0 +1,27 @@
+.SignUp_Page_Div {
+  display: flex;
+  height: 700px;
+  padding: 2rem;
+  background-color: transparent;
+}
+
+.SignUp_left_div{
+    width: 50%;
+    background: black;
+    color: white;
+    padding: 2rem;
+    border-radius: 20px;
+}
+.sign_up_button_div{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+.sign_up_button{
+    padding: 1rem 2rem;
+    width: 400px;
+    border-radius: 10px;
+    border: none;
+    background-color: rgb(196 107 107);
+    color: rgb(0, 0, 0);
+}

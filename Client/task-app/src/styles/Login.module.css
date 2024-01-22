@@ -1,0 +1,36 @@
+.loginMainPage {
+  display: flex;
+  height: 700px;
+  padding: 2rem;
+  /* background-color: lightgray; */
+  }
+
+.loginpage_left_div{
+    width: 50%;
+    padding: 2rem;
+    border-radius: 20px;
+    background-color: whitesmoke;
+
+}
+
+.forget_password{
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 40px;
+}
+.sign_in_button{
+    padding: 1rem 2rem;
+    width: 400px;
+    border-radius: 10px;
+    border: none;
+    background-color: black;
+    color: white;
+
+}
+
+.sign_in_button_div{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}

@@ -1,0 +1,56 @@
+.task_Main_div {
+  display: grid;
+  grid-template-columns: 90px 280px 1fr 250px 120px;
+  /* margin-top: 50px; */
+  background-color: aquamarine;
+}
+.task_row_div {
+  display: grid;
+  grid-template-columns: 90px 280px 1fr 250px 120px;
+  /* margin-top: 50px; */
+  background-color: white;
+}
+.list_Task {
+  border: 0.5px solid;
+  padding: 5px;
+}
+
+.newTask {
+  padding-left: 33px;
+  padding-right: 33px;
+  padding-bottom: 16px;
+  padding-top: 16px;
+  border-radius: 9px;
+  background: #d5f365;
+  border: none;
+  font-family: inherit;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.4s;
+}
+
+.newTask:hover {
+  box-shadow: 7px 5px 56px -14px #c3d900;
+}
+
+.newTask:active {
+  transform: scale(0.97);
+  box-shadow: 7px 5px 56px -10px #c3d900;
+}
+.edit_task_button,
+.delete_task_button{
+    display: flex;
+    align-items: center;
+    background: transparent;
+    font-size: 15px;
+    border: none;
+}
+.Save_buttton{
+    padding: 12px;
+    background: #aa80ff;
+    border: none;
+    border-radius: 20px;
+    color: black;
+    font-size: 15px;
+    font-family: monospace;
+}
