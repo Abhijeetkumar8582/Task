@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import Style from '@/styles/Task.module.css';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 // import Box from '@mui/material/Box';
-import {count} from '../Redux/Action/index.js'
+import { count } from '../Redux/Action/index.js'
 import { useSelector } from 'react-redux';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -56,35 +56,60 @@ function Task() {
             lastUpdated: '2023-03-25',
         }
     ];
-    const [listArr, setListArr] = useState(tasks.slice())
-    const [ListOf_Item,set_ListOf_Item]=useState([])
+    const [listArr, setListArr] = useState([])
+    const [ListOf_Item, set_ListOf_Item] = useState([])
     const [selectedDelete, setselectedDelete] = useState([])
-    const Checkbox_ID_Selected = (e) => {
-        if (!selectedDelete.includes(e)) {
-            console.log('add')
-            setselectedDelete((prevSelected) => [...prevSelected, e]);
+
+    const Checkbox_ID_Selected = useCallback((taskName) => {
+        console.log("Selected ID:", taskName, selectedDelete);
+        if (!selectedDelete.includes(taskName)) {
+            console.log('add');
+            setselectedDelete([...selectedDelete, taskName]);
         } else {
-            console.log('remove')
-            let update = selectedDelete.filter((element) => element !== e)
+            console.log('remove');
+            let update = selectedDelete.filter((element) => element !== taskName);
+            console.log(update);
             setselectedDelete(update);
         }
-    };
+        console.log("Selected ID:", taskName, selectedDelete, "after");
+    }, [selectedDelete, setselectedDelete]);
+
+
     useEffect(() => {
-        fetch(`http://localhost:4000/allTask`,{
-            method:"GET",
-            headers:{
-                "Authorization":User_Access_Token
+        fetch(`http://localhost:4000/allTask`, {
+            method: "GET",
+            headers: {
+                "Authorization": User_Access_Token
             }
         })
-        .then(response => response.json())
-            .then(result => set_ListOf_Item(result))
+            .then(response => response.json())
+            .then(result => {
+                setListArr(result)
+                set_ListOf_Item(result)
+            })
             .catch(error => console.log('error', error));
-    }, [])
-    console.log(selectedDelete)
+    }, [ListOf_Item, listArr])
+
+    // console.log(selectedDelete)
     const deleteTask = () => {
-        if (listArr.length !== 0) {
-            const updateList = listArr.filter((element) => !selectedDelete.includes(element.id))
-            setListArr(updateList)
+        if (selectedDelete.length === 1) {
+            fetch('http://localhost:4000/deleteTask', {
+                method: "delete",
+                headers: {
+                    "Authorization": User_Access_Token,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "userId": User_Access_Token,
+                    "taskName": selectedDelete[0]
+                })
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log(data)
+                    setListArr((prevSelected) => [...prevSelected, data])
+                })
+                .catch((err) => console.log(err))
         }
     }
     const [open, setOpen] = React.useState(false);
@@ -110,13 +135,16 @@ function Task() {
         setStatus(event.target.value);
     };
     const EditSelected = () => {
+        console.log("check", selectedDelete, listArr)
         if (selectedDelete.length == 1) {
+            console.log("true")
             for (let i = 0; i < listArr.length; i++) {
-                if (listArr[i].id === selectedDelete[0]) {
+                if (listArr[i].taskName === selectedDelete[0]) {
                     handleOpen()
                     setTaskName(listArr[i].taskName)
-                    settaskDesc(listArr[i].description)
+                    settaskDesc(listArr[i].taskDesc)
                     setStatus(listArr[i].status)
+
                     break;
                 }
             }
@@ -127,10 +155,28 @@ function Task() {
     }
     const On_Edit_Save = () => {
         for (let i = 0; i < listArr.length; i++) {
-            if (listArr[i].id === selectedDelete[0]) {
+            if (listArr[i].taskName === selectedDelete[0]) {
                 listArr[i].taskName = taskName
                 listArr[i].description = taskDesc
                 listArr[i].status = status
+                fetch('http://localhost:4000/updateTask', {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": User_Access_Token,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        "taskName": selectedDelete[0],
+                        "taskDesc": taskDesc,
+                        "status": status
+                    })
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        console.log(data)
+                    })
+                    // setListArr((prevSelected) => [...prevSelected, data])})
+                    .catch((err) => console.log(err))
                 handleClose()
                 console.log(listArr)
                 break;
@@ -179,26 +225,41 @@ function Task() {
         const data = {
             id: id,
             taskName: CreateTaskName,
-            description: CreateTaskDesc,
+            taskDesc: CreateTaskDesc,
             status: createStatus,
             lastUpdated: new Date().toDateString(),
         }
-        fetch('http://localhost:4000/createTask',{
-            method:"POST",
-            headers:{
-                "Authorization":User_Access_Token,
-                "Content-Type":"application/json"
-            }
+        fetch('http://localhost:4000/createTask', {
+            method: "POST",
+            headers: {
+                "Authorization": User_Access_Token,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
         })
+            .then((res) => res.json())
+            .then((data) => setListArr((prevSelected) => [...prevSelected, data]))
         CreateTaskClose()
         setListArr((prevSelected) => [...prevSelected, data])
+    }
+    const on_delete_task = () => {
+        fetch('http://localhost:4000/createTask', {
+            method: "POST",
+            headers: {
+                "Authorization": User_Access_Token,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+            .then((res) => res.json())
+            .then((data) => setListArr((prevSelected) => [...prevSelected, data]))
     }
     return (
         <div style={{ padding: '2rem', background: 'linen', height: '90vh' }} >
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                    <h2>Hey {user_Name.slice(0,1).toUpperCase()+user_Name.slice(1)}👋, Here are your list of task</h2>
+                    <h2>Hey {user_Name.slice(0, 1).toUpperCase() + user_Name.slice(1)}👋, Here are your list of task</h2>
                 </div>
                 <div>
                     <button onClick={CreateTaskOpen} className={Style.newTask}>New task</button>
@@ -219,8 +280,8 @@ function Task() {
                 </div>
                 <div>
                     {ListOf_Item.map((element, i) => (
-                        <div className={Style.task_row_div} key={i}>
-                            <div className={Style.list_Task}><input type="checkbox" onChange={() => Checkbox_ID_Selected(element.id)} />{element.id}</div>
+                        <div className={Style.task_row_div} key={element.taskName}>
+                            <div className={Style.list_Task}><input type="checkbox" onChange={() => Checkbox_ID_Selected(`${element.taskName}`)} />{element.id}</div>
                             <div className={Style.list_Task}>{element.taskName}</div>
                             <div className={Style.list_Task}>{element.taskDesc}</div>
                             <div className={Style.list_Task} ><span style={{ background: 'red', padding: '5px 10px', borderRadius: '20px', fontSize: '12px' }}>{element.status}</span></div>

@@ -34,8 +34,8 @@ function Login() {
             },
             body: JSON.stringify(
                 {
-                    "email": email,
-                    "password": password
+                    "email": 'abhi@yel.ai',
+                    "password": '1234'
                 }
             )
         })
