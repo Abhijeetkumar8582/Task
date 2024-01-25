@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 function Login() {
     const router = useRouter();
     const dispatch=useDispatch()
+    console.log('test')
     const [email, setEmail] = useState('')
     const [EmailError, setEmailError] = useState(false)
     const [EmailErrorMessage, setEmailErrorMessage] = useState('Email ID')

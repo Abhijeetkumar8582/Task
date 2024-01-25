@@ -8,71 +8,28 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 // import Box from '@mui/material/Box';
-import { count } from '../Redux/Action/index.js'
-import { useSelector } from 'react-redux';
+import { toggleSelected } from '../Redux/Action/index.js'
+// import { count } from '../Redux/Action/index.js'
+import { useDispatch, useSelector } from "react-redux";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 function Task() {
+    const dispatch = useDispatch()
     const User_Access_Token = useSelector(state => state.accessToken);
     const user_Name = useSelector(state => state.userName);
 
-    const tasks = [
-        {
-            id: 1,
-            taskName: 'React Project',
-            description: 'Working on task application for resume',
-            status: 'Work In Progess',
-            lastUpdated: '2023-03-12',
-        },
-        {
-            id: 2,
-            taskName: 'Node.js Backend',
-            description: 'Setting up server and API endpoints',
-            status: 'Work In Progess',
-            lastUpdated: '2023-03-15',
-        },
-        {
-            id: 3,
-            taskName: 'Design Mockups',
-            description: 'Creating UI mockups for user feedback',
-            status: 'Work In Progess',
-            lastUpdated: '2023-03-18',
-        },
-        {
-            id: 4,
-            taskName: 'Write Documentation',
-            description: 'Documenting project features and usage',
-            status: 'Work In Progess',
-            lastUpdated: '2023-03-20',
-        },
-        {
-            id: 5,
-            taskName: 'Testing Phase',
-            description: 'Conducting comprehensive testing for bug detection',
-            status: 'Work In Progess',
-            lastUpdated: '2023-03-25',
-        }
-    ];
-    const [listArr, setListArr] = useState([])
-    const [ListOf_Item, set_ListOf_Item] = useState([])
-    const [selectedDelete, setselectedDelete] = useState([])
+    const user_Selected = useSelector((state) => state.selectCheckBox.selectedDelete);
 
-    const Checkbox_ID_Selected = useCallback((taskName) => {
-        console.log("Selected ID:", taskName, selectedDelete);
-        if (!selectedDelete.includes(taskName)) {
-            console.log('add');
-            setselectedDelete([...selectedDelete, taskName]);
-        } else {
-            console.log('remove');
-            let update = selectedDelete.filter((element) => element !== taskName);
-            console.log(update);
-            setselectedDelete(update);
-        }
-        console.log("Selected ID:", taskName, selectedDelete, "after");
-    }, [selectedDelete, setselectedDelete]);
+    console.log(user_Selected)
+
+    const [listArr, setListArr] = useState([])
+
+    const Checkbox_ID_Selected = (taskName) => {
+        dispatch(toggleSelected(taskName))
+    }
 
 
     useEffect(() => {
@@ -85,14 +42,14 @@ function Task() {
             .then(response => response.json())
             .then(result => {
                 setListArr(result)
-                set_ListOf_Item(result)
+
             })
             .catch(error => console.log('error', error));
-    }, [ListOf_Item, listArr])
+    }, []);
+    
 
-    // console.log(selectedDelete)
     const deleteTask = () => {
-        if (selectedDelete.length === 1) {
+        if (user_Selected.length === 1) {
             fetch('http://localhost:4000/deleteTask', {
                 method: "delete",
                 headers: {
@@ -101,7 +58,7 @@ function Task() {
                 },
                 body: JSON.stringify({
                     "userId": User_Access_Token,
-                    "taskName": selectedDelete[0]
+                    "taskName": user_Selected[0]
                 })
             })
                 .then((res) => res.json())
@@ -135,16 +92,13 @@ function Task() {
         setStatus(event.target.value);
     };
     const EditSelected = () => {
-        console.log("check", selectedDelete, listArr)
-        if (selectedDelete.length == 1) {
-            console.log("true")
+        if (user_Selected.length == 1) {
             for (let i = 0; i < listArr.length; i++) {
-                if (listArr[i].taskName === selectedDelete[0]) {
+                if (listArr[i].taskName === user_Selected[0]) {
                     handleOpen()
                     setTaskName(listArr[i].taskName)
                     settaskDesc(listArr[i].taskDesc)
                     setStatus(listArr[i].status)
-
                     break;
                 }
             }
@@ -155,7 +109,7 @@ function Task() {
     }
     const On_Edit_Save = () => {
         for (let i = 0; i < listArr.length; i++) {
-            if (listArr[i].taskName === selectedDelete[0]) {
+            if (listArr[i].taskName === user_Selected[0]) {
                 listArr[i].taskName = taskName
                 listArr[i].description = taskDesc
                 listArr[i].status = status
@@ -166,7 +120,7 @@ function Task() {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        "taskName": selectedDelete[0],
+                        "taskName": user_Selected[0],
                         "taskDesc": taskDesc,
                         "status": status
                     })
@@ -175,7 +129,6 @@ function Task() {
                     .then((data) => {
                         console.log(data)
                     })
-                    // setListArr((prevSelected) => [...prevSelected, data])})
                     .catch((err) => console.log(err))
                 handleClose()
                 console.log(listArr)
@@ -279,8 +232,8 @@ function Task() {
 
                 </div>
                 <div>
-                    {ListOf_Item.map((element, i) => (
-                        <div className={Style.task_row_div} key={element.taskName}>
+                    {listArr.map((element, i) => (
+                        <div className={Style.task_row_div} key={i}>
                             <div className={Style.list_Task}><input type="checkbox" onChange={() => Checkbox_ID_Selected(`${element.taskName}`)} />{element.id}</div>
                             <div className={Style.list_Task}>{element.taskName}</div>
                             <div className={Style.list_Task}>{element.taskDesc}</div>

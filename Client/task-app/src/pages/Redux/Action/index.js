@@ -18,3 +18,9 @@ export const userName = (name) => {
         payload: name
     }
 }
+
+export const toggleSelected = (taskName) => (
+    {
+    type: 'TOGGLE_SELECTED',
+    payload: taskName,
+});
