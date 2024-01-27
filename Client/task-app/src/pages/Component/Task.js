@@ -45,7 +45,7 @@ function Task() {
 
             })
             .catch(error => console.log('error', error));
-    }, []);
+    }, [setListArr]);
     
 
     const deleteTask = () => {
@@ -127,7 +127,7 @@ function Task() {
                 })
                     .then((res) => res.json())
                     .then((data) => {
-                        console.log(data)
+                        setListArr(data)
                     })
                     .catch((err) => console.log(err))
                 handleClose()
@@ -193,7 +193,7 @@ function Task() {
             .then((res) => res.json())
             .then((data) => setListArr((prevSelected) => [...prevSelected, data]))
         CreateTaskClose()
-        setListArr((prevSelected) => [...prevSelected, data])
+        // setListArr((prevSelected) => [...prevSelected, data])
     }
     const on_delete_task = () => {
         fetch('http://localhost:4000/createTask', {

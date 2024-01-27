@@ -24,3 +24,9 @@ export const toggleSelected = (taskName) => (
     type: 'TOGGLE_SELECTED',
     payload: taskName,
 });
+
+export const taskListArray = (data) => (
+    {
+    type: 'taskListArray',
+    payload: data,
+});
