@@ -23,7 +23,7 @@ function Task() {
 
     const user_Selected = useSelector((state) => state.selectCheckBox.selectedDelete);
 
-    console.log(user_Selected)
+    // console.log(user_Selected)
 
     const [listArr, setListArr] = useState([])
 
@@ -114,9 +114,13 @@ function Task() {
     const On_Edit_Save = () => {
         for (let i = 0; i < listArr.length; i++) {
             if (listArr[i].taskName === user_Selected[0]) {
+                console.log(user_Selected,"before",listArr[i].taskName)
+                dispatch(toggleSelected(listArr[i].taskName))
                 listArr[i].taskName = taskName
                 listArr[i].description = taskDesc
                 listArr[i].status = status
+                
+               
                 fetch('http://localhost:4000/updateTask', {
                     method: "PUT",
                     headers: {
@@ -134,6 +138,8 @@ function Task() {
                         setListArr(data)
                     })
                     .catch((err) => console.log(err))
+                    dispatch(toggleSelected(taskName))
+                    console.log(user_Selected,"after",taskName)
                 handleClose()
                 console.log(listArr)
                 break;
