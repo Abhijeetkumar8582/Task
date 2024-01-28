@@ -33,10 +33,14 @@ function Task() {
 
 
     useEffect(() => {
+        if (!sessionStorage.getItem('userLogin')) {
+            router.push("/Component/Login")
+        }
+
         fetch(`http://localhost:4000/allTask`, {
             method: "GET",
             headers: {
-                "Authorization": User_Access_Token
+                "Authorization": sessionStorage.getItem('userLogin')
             }
         })
             .then(response => response.json())
@@ -46,14 +50,14 @@ function Task() {
             })
             .catch(error => console.log('error', error));
     }, [setListArr]);
-    
+
 
     const deleteTask = () => {
         if (user_Selected.length === 1) {
             fetch('http://localhost:4000/deleteTask', {
                 method: "delete",
                 headers: {
-                    "Authorization": User_Access_Token,
+                    "Authorization": sessionStorage.getItem('userLogin'),
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
@@ -222,27 +226,26 @@ function Task() {
                 <div style={{ display: 'flex', alignItems: 'center', padding: '5px' }}><button className={Style.edit_task_button} onClick={() => EditSelected()}><EditIcon /> Edit</button></div>
                 <div style={{ display: 'flex', alignItems: 'center', padding: '5px' }}><button className={Style.delete_task_button} onClick={() => deleteTask()}><DeleteIcon /> Delete</button></div>
             </div>
-            <div className={Style.task_div}>
-                <div className={Style.task_Main_div}>
-                    <div className={Style.list_Task}><input type="checkbox" />Id</div>
-                    <div className={Style.list_Task}>Task Name</div>
-                    <div className={Style.list_Task}>Task Description</div>
-                    <div className={Style.list_Task}>Status</div>
-                    <div className={Style.list_Task}>last Updated</div>
-
-                </div>
-                <div>
-                    {listArr.map((element, i) => (
-                        <div className={Style.task_row_div} key={i}>
-                            <div className={Style.list_Task}><input type="checkbox" onChange={() => Checkbox_ID_Selected(`${element.taskName}`)} />{element.id}</div>
-                            <div className={Style.list_Task}>{element.taskName}</div>
-                            <div className={Style.list_Task}>{element.taskDesc}</div>
-                            <div className={Style.list_Task} ><span style={{ background: 'red', padding: '5px 10px', borderRadius: '20px', fontSize: '12px' }}>{element.status}</span></div>
-                            <div className={Style.list_Task}>{element.lastUpdated}</div>
+            <div className={Style.task_Main_div}>
+                {listArr.map((element, i) => (
+                    <div className={Style.task_row_div} key={i}>
+                        <div className={Style.task_row_Inner_Item}>
+                            <div style={{ display: 'flex' }}><input type="checkbox" style={{ margin: '0px 5px 0px 0px' }} onChange={() => Checkbox_ID_Selected(`${element.taskName}`)} /><h4>{i + 1}</h4></div>
+                            <div><h4>{element.status}</h4></div>
                         </div>
-                    ))}
-                </div>
+                        <div className={Style.task_row_Inner_Item}>
+                            <h4>{element.taskName}</h4>
+                        </div>
+                        <div className={Style.task_row_Inner_Item}>
+                            <h4>{element.taskDesc}</h4>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
+                            <h4>{element.lastUpdated}</h4>
+                        </div>
+                    </div>
+                ))}
             </div>
+
             <div>
                 {/* <Button onClick={handleOpen}>Open modal</Button> */}
                 <Modal

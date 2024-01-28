@@ -1,14 +1,29 @@
 .task_Main_div {
-  display: grid;
-  grid-template-columns: 90px 280px 1fr 250px 120px;
-  /* margin-top: 50px; */
-  background-color: aquamarine;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
 }
 .task_row_div {
+  background: white;
+  max-width: 400px;
+  max-height: 150px;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px;
+  padding: 1rem;
   display: grid;
-  grid-template-columns: 90px 280px 1fr 250px 120px;
-  /* margin-top: 50px; */
-  background-color: white;
+}
+.task_row_Inner_Item{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+.task_row_Inner_Item2{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
 }
 .list_Task {
   border: 0.5px solid;

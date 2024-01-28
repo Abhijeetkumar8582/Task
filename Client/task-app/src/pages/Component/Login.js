@@ -5,14 +5,13 @@ import Box from '@mui/material/Box';
 import Style from '@/styles/Login.module.css';
 import Link from 'next/link';
 import { useRouter } from "next/router";
-import {accessToken,userName } from '../Redux/Action/index.js'
+import { accessToken, userName } from '../Redux/Action/index.js'
 import { useDispatch, useSelector } from "react-redux";
 
 
 function Login() {
     const router = useRouter();
-    const dispatch=useDispatch()
-    console.log('test')
+    const dispatch = useDispatch()
     const [email, setEmail] = useState('')
     const [EmailError, setEmailError] = useState(false)
     const [EmailErrorMessage, setEmailErrorMessage] = useState('Email ID')
@@ -28,6 +27,7 @@ function Login() {
         setpasswordError(false)
     }
     const Logins = () => {
+
         fetch('http://localhost:4000/login', {
             method: 'POST',
             headers: {
@@ -46,6 +46,7 @@ function Login() {
                     console.log(data.accessToken)
                     dispatch(accessToken(data.accessToken))
                     dispatch(userName(data.name))
+                    sessionStorage.setItem('userLogin', data.accessToken)
                     router.push("/Component/Task")
                 } else if (data.error == "Invalid Email ID details") {
                     setEmailError(true)
