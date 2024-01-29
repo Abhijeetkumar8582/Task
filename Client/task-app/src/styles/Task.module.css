@@ -7,7 +7,7 @@
 .task_row_div {
   background: white;
   max-width: 400px;
-  max-height: 150px;
+  /* max-height: 150px; */
   width: 100%;
   height: 100%;
   border-radius: 20px;
@@ -15,12 +15,16 @@
   padding: 1rem;
   display: grid;
 }
-.task_row_Inner_Item{
+.task_row_div:hover{
+background-color: #b9b7ff;
+/* max-height: 250px; */
+}
+.task_row_Inner_Item {
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
 }
-.task_row_Inner_Item2{
+.task_row_Inner_Item2 {
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
@@ -53,19 +57,50 @@
   box-shadow: 7px 5px 56px -10px #c3d900;
 }
 .edit_task_button,
-.delete_task_button{
-    display: flex;
-    align-items: center;
-    background: transparent;
-    font-size: 15px;
-    border: none;
+.delete_task_button {
+  display: flex;
+  align-items: center;
+  background: transparent;
+  font-size: 15px;
+  border: none;
 }
-.Save_buttton{
-    padding: 12px;
-    background: #aa80ff;
-    border: none;
-    border-radius: 20px;
-    color: black;
-    font-size: 15px;
-    font-family: monospace;
+.Save_buttton {
+  padding: 12px;
+  background: #aa80ff;
+  border: none;
+  border-radius: 20px;
+  color: black;
+  font-size: 15px;
+  font-family: monospace;
+}
+
+.status_Box_Testing{
+  padding: 0px 24px;
+  background: #837fff;
+  border-radius: 10px;
+  /* max-width: 110px; */
+  /* width: 100%; */
+  display:flex;
+  justify-content: center;
+  
+}
+.status_Box_production{
+  padding: 0px 24px;
+  background:#64e19a;
+  border-radius: 10px;
+  /* max-width: 110px; */
+  /* width: 100%; */
+  display:flex;
+  justify-content: center;
+  
+}
+.status_Box_Work_In_Progess{
+  padding: 0px 24px;
+  background:rgb(255, 193, 127);
+  border-radius: 10px;
+  /* max-width: 110px; */
+  /* width: 100%; */
+  display:flex;
+  justify-content: center;
+  
 }

@@ -15,6 +15,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import TaskDescription from './TaskDescHOC.js'
 
 function Task() {
     const dispatch = useDispatch()
@@ -36,7 +37,11 @@ function Task() {
         if (!sessionStorage.getItem('userLogin')) {
             router.push("/Component/Login")
         }
+        
+        rerender()
+    }, [setListArr]);
 
+    const rerender = () => {
         fetch(`http://localhost:4000/allTask`, {
             method: "GET",
             headers: {
@@ -49,9 +54,7 @@ function Task() {
 
             })
             .catch(error => console.log('error', error));
-    }, [setListArr]);
-
-
+    }
     const deleteTask = () => {
         if (user_Selected.length === 1) {
             fetch('http://localhost:4000/deleteTask', {
@@ -61,14 +64,15 @@ function Task() {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    "userId": User_Access_Token,
+                    "userId": sessionStorage.getItem('userLogin'),
                     "taskName": user_Selected[0]
                 })
             })
                 .then((res) => res.json())
                 .then((data) => {
                     console.log(data)
-                    setListArr((prevSelected) => [...prevSelected, data])
+                    rerender()
+                    // setListArr((prevSelected) => [...prevSelected, data])
                 })
                 .catch((err) => console.log(err))
         }
@@ -114,17 +118,17 @@ function Task() {
     const On_Edit_Save = () => {
         for (let i = 0; i < listArr.length; i++) {
             if (listArr[i].taskName === user_Selected[0]) {
-                console.log(user_Selected,"before",listArr[i].taskName)
-                dispatch(toggleSelected(listArr[i].taskName))
+                // console.log(user_Selected,"before",listArr[i].taskName)
+                // dispatch(toggleSelected(listArr[i].taskName))
                 listArr[i].taskName = taskName
                 listArr[i].description = taskDesc
                 listArr[i].status = status
-                
-               
+
+
                 fetch('http://localhost:4000/updateTask', {
                     method: "PUT",
                     headers: {
-                        "Authorization": User_Access_Token,
+                        "Authorization": sessionStorage.getItem('userLogin'),
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
@@ -138,10 +142,10 @@ function Task() {
                         setListArr(data)
                     })
                     .catch((err) => console.log(err))
-                    dispatch(toggleSelected(taskName))
-                    console.log(user_Selected,"after",taskName)
+                // dispatch(toggleSelected(taskName))
+                // console.log(user_Selected,"after",taskName)
                 handleClose()
-                console.log(listArr)
+                // console.log(listArr)
                 break;
             }
         }
@@ -195,7 +199,7 @@ function Task() {
         fetch('http://localhost:4000/createTask', {
             method: "POST",
             headers: {
-                "Authorization": User_Access_Token,
+                "Authorization": sessionStorage.getItem('userLogin'),
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(data)
@@ -209,7 +213,7 @@ function Task() {
         fetch('http://localhost:4000/createTask', {
             method: "POST",
             headers: {
-                "Authorization": User_Access_Token,
+                "Authorization": sessionStorage.getItem('userLogin'),
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(data)
@@ -217,8 +221,21 @@ function Task() {
             .then((res) => res.json())
             .then((data) => setListArr((prevSelected) => [...prevSelected, data]))
     }
+    const getStatusBoxClass = (status) => {
+        if (status === "Testing") {
+            return Style.status_Box_Testing
+        } else if (status === "In Production") {
+            return Style.status_Box_production
+        } else {
+            return Style.status_Box_Work_In_Progess
+        }
+    }
+   
+    const taskRow_selected=(task,i)=>{
+     
+    }
     return (
-        <div style={{ padding: '2rem', background: 'linen', height: '90vh' }} >
+        <div style={{ padding: '2rem', background: 'linen', height: '100%' }} >
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
@@ -232,23 +249,9 @@ function Task() {
                 <div style={{ display: 'flex', alignItems: 'center', padding: '5px' }}><button className={Style.edit_task_button} onClick={() => EditSelected()}><EditIcon /> Edit</button></div>
                 <div style={{ display: 'flex', alignItems: 'center', padding: '5px' }}><button className={Style.delete_task_button} onClick={() => deleteTask()}><DeleteIcon /> Delete</button></div>
             </div>
-            <div className={Style.task_Main_div}>
-                {listArr.map((element, i) => (
-                    <div className={Style.task_row_div} key={i}>
-                        <div className={Style.task_row_Inner_Item}>
-                            <div style={{ display: 'flex' }}><input type="checkbox" style={{ margin: '0px 5px 0px 0px' }} onChange={() => Checkbox_ID_Selected(`${element.taskName}`)} /><h4>{i + 1}</h4></div>
-                            <div><h4>{element.status}</h4></div>
-                        </div>
-                        <div className={Style.task_row_Inner_Item}>
-                            <h4>{element.taskName}</h4>
-                        </div>
-                        <div className={Style.task_row_Inner_Item}>
-                            <h4>{element.taskDesc}</h4>
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
-                            <h4>{element.lastUpdated}</h4>
-                        </div>
-                    </div>
+            <div className={Style.task_Main_div} >
+                {listArr.map((element, i) => (  
+                        <TaskDescription i={i} element={element} taskRowSelected={taskRow_selected} getStatusBoxClass={getStatusBoxClass}/>
                 ))}
             </div>
 
@@ -265,7 +268,7 @@ function Task() {
                             Please update your necessary field
                         </Typography>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '20px' }}>
-                            <TextField id="outlined-basic" defaultValue={taskName} onChange={(e) => taskNameChange(e)} label="Task Name" variant="outlined" />
+                            <TextField id="outlined-basic" disabled defaultValue={taskName} onChange={(e) => taskNameChange(e)} label="Task Name" variant="outlined" />
                             <TextField id="outlined-basic" defaultValue={taskDesc} onChange={(e) => taskDescChange(e)} label="Task Description" variant="outlined" />
                             <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">Status</InputLabel>
