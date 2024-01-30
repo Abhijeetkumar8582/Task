@@ -3,7 +3,6 @@ import reducer from './Reducer/index';
 
 const store = configureStore({
   reducer: reducer
-
 });
 
 export default store;

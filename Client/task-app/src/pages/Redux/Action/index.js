@@ -19,14 +19,16 @@ export const userName = (name) => {
     }
 }
 
-export const toggleSelected = (taskName) => (
-    {
-    type: 'TOGGLE_SELECTED',
-    payload: taskName,
-});
+export const toggleSelected = (taskName) => {
+    return {
+        type: 'TOGGLE_SELECTED',
+        payload: taskName,
+    }
+};
 
-export const taskListArray = (data) => (
-    {
-    type: 'taskListArray',
-    payload: data,
-});
+export const taskListArray = (data) => {
+    return {
+        type: 'taskListArray',
+        payload: data,
+    }
+};
