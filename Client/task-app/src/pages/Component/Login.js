@@ -46,6 +46,7 @@ function Login() {
                     console.log(data.accessToken)
                     dispatch(accessToken(data.accessToken))
                     dispatch(userName(data.name))
+                    sessionStorage.setItem("userName",data.name)
                     sessionStorage.setItem('userLogin', data.accessToken)
                     router.push("/Component/Task")
                 } else if (data.error == "Invalid Email ID details") {

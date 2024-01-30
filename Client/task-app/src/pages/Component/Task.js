@@ -16,11 +16,13 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import TaskDescription from './TaskDescHOC.js'
+import { useRouter } from 'next/router.js';
 
 function Task() {
+    const router = useRouter()
     const dispatch = useDispatch()
     const User_Access_Token = useSelector(state => state.accessToken);
-    const user_Name = useSelector(state => state.userName);
+    const [userName, setUserName] = useState('')
 
     const user_Selected = useSelector((state) => state.selectCheckBox.selectedDelete);
 
@@ -37,7 +39,7 @@ function Task() {
         if (!sessionStorage.getItem('userLogin')) {
             router.push("/Component/Login")
         }
-        
+        setUserName(sessionStorage.getItem('userName'))
         rerender()
     }, [setListArr]);
 
@@ -118,13 +120,12 @@ function Task() {
     const On_Edit_Save = () => {
         for (let i = 0; i < listArr.length; i++) {
             if (listArr[i].taskName === user_Selected[0]) {
-                // console.log(user_Selected,"before",listArr[i].taskName)
-                // dispatch(toggleSelected(listArr[i].taskName))
+                dispatch(toggleSelected(listArr[i].taskName))
+                console.log(user_Selected, listArr[i].taskName)
                 listArr[i].taskName = taskName
                 listArr[i].description = taskDesc
                 listArr[i].status = status
-
-
+                
                 fetch('http://localhost:4000/updateTask', {
                     method: "PUT",
                     headers: {
@@ -133,6 +134,7 @@ function Task() {
                     },
                     body: JSON.stringify({
                         "taskName": user_Selected[0],
+                        "updateTaskName": taskName,
                         "taskDesc": taskDesc,
                         "status": status
                     })
@@ -143,9 +145,8 @@ function Task() {
                     })
                     .catch((err) => console.log(err))
                 // dispatch(toggleSelected(taskName))
-                // console.log(user_Selected,"after",taskName)
+                console.log(user_Selected, taskName)
                 handleClose()
-                // console.log(listArr)
                 break;
             }
         }
@@ -230,16 +231,16 @@ function Task() {
             return Style.status_Box_Work_In_Progess
         }
     }
-   
-    const taskRow_selected=(task,i)=>{
-     
+
+    const taskRow_selected = (task, i) => {
+
     }
     return (
-        <div style={{ padding: '2rem', background: 'linen', height: '100%' }} >
+        <div style={{ padding: '2rem', background: 'linen', height: '100vh' }} >
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                    <h2>Hey {user_Name.slice(0, 1).toUpperCase() + user_Name.slice(1)}👋, Here are your list of task</h2>
+                    <h2>Welcome back {userName.slice(0, 1).toUpperCase() + userName.slice(1)}👋, Here are your list of task</h2>
                 </div>
                 <div>
                     <button onClick={CreateTaskOpen} className={Style.newTask}>New task</button>
@@ -250,8 +251,8 @@ function Task() {
                 <div style={{ display: 'flex', alignItems: 'center', padding: '5px' }}><button className={Style.delete_task_button} onClick={() => deleteTask()}><DeleteIcon /> Delete</button></div>
             </div>
             <div className={Style.task_Main_div} >
-                {listArr.map((element, i) => (  
-                        <TaskDescription i={i} element={element} taskRowSelected={taskRow_selected} getStatusBoxClass={getStatusBoxClass}/>
+                {listArr.map((element, i) => (
+                    <TaskDescription i={i} element={element} taskRowSelected={taskRow_selected} getStatusBoxClass={getStatusBoxClass} Checkbox_ID_Selected={Checkbox_ID_Selected} key = {element.taskName} />
                 ))}
             </div>
 
@@ -268,7 +269,7 @@ function Task() {
                             Please update your necessary field
                         </Typography>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '20px' }}>
-                            <TextField id="outlined-basic" disabled defaultValue={taskName} onChange={(e) => taskNameChange(e)} label="Task Name" variant="outlined" />
+                            <TextField id="outlined-basic" defaultValue={taskName} onChange={(e) => taskNameChange(e)} label="Task Name" variant="outlined" />
                             <TextField id="outlined-basic" defaultValue={taskDesc} onChange={(e) => taskDescChange(e)} label="Task Description" variant="outlined" />
                             <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">Status</InputLabel>

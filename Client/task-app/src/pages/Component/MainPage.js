@@ -20,28 +20,28 @@ function MainPage() {
       id: 2,
       taskName: 'Node.js Backend',
       description: 'Setting up server and API endpoints',
-      status: 'Pending',
+      status: 'Testing',
       lastUpdated: '2023-03-15',
     },
     {
       id: 3,
       taskName: 'Design Mockups',
       description: 'Creating UI mockups for user feedback',
-      status: 'In design phase',
+      status: 'Testing',
       lastUpdated: '2023-03-18',
     },
     {
       id: 4,
       taskName: 'Write Documentation',
       description: 'Documenting project features and usage',
-      status: 'To be started',
+      status: 'In Production',
       lastUpdated: '2023-03-20',
     },
     {
       id: 5,
       taskName: 'Testing Phase',
       description: 'Conducting comprehensive testing for bug detection',
-      status: 'Upcoming',
+      status: 'Work in progress',
       lastUpdated: '2023-03-25',
     },
   ];
@@ -52,50 +52,59 @@ function MainPage() {
       router.push("/Component/Login")
     }
   }
+  const getStatusBoxClass = (status) => {
+    if (status === "Testing") {
+      return Style.status_Testing
+    } else if (status === "In Production") {
+      return Style.status_Production
+    } else {
+      return Style.status_WIP
+    }
+  }
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '50px' }}>
-        <div>
-          <h4>Task App</h4>
+    <div className={Style.Main_Div}>
+      <div className={Style.Main_Div_NavBar}>
+        <div className={Style.NavBar_logo_Div}>
+          <div className={Style.NavBar_logo_Div_innerOne_Image_div}><img src='https://repository-images.githubusercontent.com/438523287/ae558b41-79d7-49e1-a0b3-ff4e09faa400' style={{ width: '100%' }} /></div>
+          <div className={Style.NavBar_logo_Div_innerOne_Image_div_content}><h4>Task App</h4></div>
         </div>
-        <div>
-          <button className={Style.getStartedBtn} onClick={() => getUserLogin()} ><h5>Get Started's</h5></button>
+        <div className={Style.NavBar_logo_Div_innerTwo}>
+          <h4>Get Started With your Task Application</h4>
         </div>
       </div>
-      <div>
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-          <h1>Welcome to task Application</h1>
+      <div className={Style.Main_div_content_Section}>
 
+
+        <div className={Style.content_Section_one}>
+
+          <div className={Style.Section_one_Heading}>
+            <h1 className={Style.Section_one_Heading_text}>Organize your life with ease: innovative app for smart planning!</h1>
+          </div>
+          <div>
+            <button className={Style.getStartedBtn}> Get Started</button>
+          </div>
+          <div className={Style.Section_one_More_Section}>
+            <h4 className={Style.Section_one_More_Section_text}>Maximize productivity with an intuitive interface. Seamlessly organize, prioritize, and conquer tasks effortlessly. Welcome to streamlined efficiency, where managing to-dos is a breeze.!</h4>
+          </div>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '50px' }}>
-          <h4>Streamline productivity with an intuitive interface. Organize, prioritize, and conquer your to-dos effortlessly. Welcome to efficiency!</h4>
-        </div>
-
-        <div >
-
-          <table >
-            <tbody>
-              <tr>
-                <td>ID</td>
-                <td>Task Name</td>
-                <td>Description</td>
-                <td>Status</td>
-                <td>lastUpdated</td>
-              </tr>
-              {tasks.map((element, i) => (
-                <tr key={i}>
-                  <td>{element.id}</td>
-                  <td>{element.taskName}</td>
-                  <td>{element.description}</td>
-                  <td>{element.status}</td>
-                  <td>{element.lastUpdated}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className={Style.content_Section_two}>
+          <div className={Style.TaskList_Main_div}>
+            {tasks.map((element) => (
+              <div className={Style.TaskListCard}>
+                <div className={Style.TaskListCard_Status_div}>
+                  <div className={getStatusBoxClass(element.status)}><h6>{element.status}</h6></div>
+                </div>
+                <div><h4>{element.taskName}</h4>
+                </div>
+                <div><p>{element.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
+
   )
 }
 

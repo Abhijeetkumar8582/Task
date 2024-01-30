@@ -1,5 +1,53 @@
+.Main_Div {
+  background: black;
+  color: white;
+  height: 100vh;
+}
+
+.Main_Div_NavBar {
+  display: flex;
+  justify-content: space-between;
+  padding: 2rem;
+}
+.NavBar_logo_Div_innerTwo {
+  display: flex;
+  align-items: center;
+}
+.NavBar_logo_Div_innerOne_Image_div {
+  max-width: 50px;
+}
+.NavBar_logo_Div_innerOne_Image_div_content {
+  display: flex;
+  align-items: center;
+}
+.NavBar_logo_Div {
+  display: flex;
+}
+.Main_div_content_Section {
+  display: flex;
+  flex-direction: row;
+  padding: 0rem 2rem;
+}
+.content_Section_one,
+.content_Section_two {
+  width: 50%;
+}
+.Section_one_Heading {
+  margin: 100px 0px 50px;
+}
+.Section_one_Heading_text {
+  font-size: 54px;
+}
+.Section_one_More_Section {
+  margin: 100px 0px 0px 0px;
+  max-width: 400px;
+}
+.Section_one_More_Section_text {
+  font-size: 15px;
+  font-weight: 400;
+}
 .getStartedBtn {
-  background: #fbca1f;
+  background: darkturquoise;
   max-height: 50px;
   font-family: inherit;
   padding: 0.6em 1.3em;
@@ -19,4 +67,49 @@
 .getStartedBtn:active {
   transform: translate(0.05em, 0.05em);
   box-shadow: 0.05em 0.05em;
+}
+.TaskList_Main_div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 50px;
+}
+.TaskListCard {
+  width: 300px;
+  height: 100px;
+  background: #262626;
+  border-radius: 10px;
+  padding: 1rem;
+  border: 1px solid #3f3f40;
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+}
+.TaskListCard:hover {
+  transform: translateY(-5px);
+  /* transform: translate3d(-5px); */
+}
+.TaskListCard_Status_div {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+.status_WIP {
+  padding: 5px 1rem;
+  background: brown;
+  border-radius: 10px;
+}
+
+.status_Testing {
+  padding: 5px 1rem;
+  background: rgb(54, 42, 165);
+  border-radius: 10px;
+}
+
+.status_Production {
+  padding: 5px 1rem;
+  background: rgb(42, 165, 65);
+  border-radius: 10px;
 }

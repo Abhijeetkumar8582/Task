@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import Style from '@/styles/Task.module.css';
 
-function TaskDescHOC({i, element, taskRowSelected,getStatusBoxClass }) {
-    const [count, setCount] = useState(58);
+function TaskDescHOC({i, element, taskRowSelected,getStatusBoxClass,Checkbox_ID_Selected }) {
+    const [count, setCount] = useState(55);
 
     const handleClick = () => {
         if (count === element.taskDesc.length) {
             console.log("deselected");
-            setCount(58);
+            setCount(55);
         } else {
             console.log("selected", element.taskDesc);
             setCount(element.taskDesc.length);
