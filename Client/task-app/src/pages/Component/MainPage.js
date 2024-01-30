@@ -90,7 +90,7 @@ function MainPage() {
         <div className={Style.content_Section_two}>
           <div className={Style.TaskList_Main_div}>
             {tasks.map((element) => (
-              <div className={Style.TaskListCard}>
+              <div className={Style.TaskListCard} key={element.taskName}>
                 <div className={Style.TaskListCard_Status_div}>
                   <div className={getStatusBoxClass(element.status)}><h6>{element.status}</h6></div>
                 </div>
