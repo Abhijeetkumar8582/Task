@@ -14,15 +14,15 @@ function SignUP() {
     const [Error_userEmail,set_Error_userEmail]=useState('')
     const [userPassword, setuserPassword] = useState('')
     const SignUP_function = () => {
-        fetch('http://localhost:4000/createUserProfile', {
+        fetch('https://task-tdbd.onrender.com/createUserProfile', {
             method: "POST",
             headers: {
                 "Content-type": "application/json"
             },
             body: JSON.stringify({
                 "name": userName,
-                "email": userEmail,
-                "password": userPassword
+                "email": userEmail
+                // "password": userPassword
             })
         })
             .then((res) => res.json())
@@ -80,7 +80,7 @@ function SignUP() {
                 </div>
                 <div style={{ marginBottom: '30px', display: 'flex', justifyContent: 'center' }}>
                     <Box sx={{ width: 500, maxWidth: '100%', color: 'white', backgroundColor: 'white', borderRadius: '10px' }}>
-                        <TextField fullWidth label="Password" id="fullWidth" onChange={(e) => userPasswor_Change(e)} />
+                        <TextField fullWidth label="Password" disabled id="fullWidth" onChange={(e) => userPasswor_Change(e)} />
                     </Box>
 
                 </div>

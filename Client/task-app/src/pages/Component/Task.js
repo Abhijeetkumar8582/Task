@@ -44,7 +44,7 @@ function Task() {
     }, [setListArr]);
 
     const rerender = () => {
-        fetch(`http://localhost:4000/allTask`, {
+        fetch(`https://task-tdbd.onrender.com/allTask`, {
             method: "GET",
             headers: {
                 "Authorization": sessionStorage.getItem('userLogin')
@@ -59,7 +59,7 @@ function Task() {
     }
     const deleteTask = () => {
         if (user_Selected.length === 1) {
-            fetch('http://localhost:4000/deleteTask', {
+            fetch('https://task-tdbd.onrender.com/deleteTask', {
                 method: "delete",
                 headers: {
                     "Authorization": sessionStorage.getItem('userLogin'),
@@ -126,7 +126,7 @@ function Task() {
                 listArr[i].description = taskDesc
                 listArr[i].status = status
                 
-                fetch('http://localhost:4000/updateTask', {
+                fetch('https://task-tdbd.onrender.com/updateTask', {
                     method: "PUT",
                     headers: {
                         "Authorization": sessionStorage.getItem('userLogin'),
@@ -197,7 +197,7 @@ function Task() {
             status: createStatus,
             lastUpdated: new Date().toDateString(),
         }
-        fetch('http://localhost:4000/createTask', {
+        fetch('https://task-tdbd.onrender.com/createTask', {
             method: "POST",
             headers: {
                 "Authorization": sessionStorage.getItem('userLogin'),
@@ -211,7 +211,7 @@ function Task() {
         // setListArr((prevSelected) => [...prevSelected, data])
     }
     const on_delete_task = () => {
-        fetch('http://localhost:4000/createTask', {
+        fetch('https://task-tdbd.onrender.com/createTask', {
             method: "POST",
             headers: {
                 "Authorization": sessionStorage.getItem('userLogin'),
