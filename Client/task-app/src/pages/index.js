@@ -5,7 +5,7 @@ function index() {
     <>
     <MainPage/>
     </>
-  )
+  ) 
 }
 
 export default index

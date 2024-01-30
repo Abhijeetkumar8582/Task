@@ -240,7 +240,7 @@ function Task() {
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                    <h2>Welcome back {userName.slice(0, 1).toUpperCase() + userName.slice(1)}👋, Here are your list of task</h2>
+                    <h2>Welcome back {userName.slice(0, 1).toUpperCase() + userName.slice(1)}👋, Here are your list of task!!</h2>
                 </div>
                 <div>
                     <button onClick={CreateTaskOpen} className={Style.newTask}>New task</button>
@@ -258,7 +258,7 @@ function Task() {
             </div>
 
             <div>
-                {/* <Button onClick={handleOpen}>Open modal</Button> */}
+                
                 <Modal
                     open={open}
                     onClose={handleClose}
@@ -293,7 +293,7 @@ function Task() {
             </div>
 
             <div>
-                {/* <Button onClick={CreateTaskOpen}>Open modal</Button> */}
+              
                 <Modal
                     open={openCreateTask}
                     onClose={CreateTaskClose}
