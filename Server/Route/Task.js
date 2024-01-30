@@ -1,6 +1,6 @@
 import express from 'express';
 import taskSchema from '../Module/taskSchema.js'
-import bcrypt from 'bcrypt'
+// import bcrypt from 'bcrypt'
 import checkapiKey from '../Middleware/middleware.js';
 
 const apiRouter = express.Router()
@@ -33,16 +33,16 @@ apiRouter.post('/createTask', checkapiKey, async (req, res) => {
 apiRouter.put('/updateTask', checkapiKey, async (req, res) => {
     try {
         const taskNamereq = req.body.taskName
-        const updateTaskName = req.body.updatedtaskName
+        const updateTaskName = req.body.updateTaskName
         const updateTaskDesc = req.body.taskDesc
         const updateTaskStatus = req.body.status
-        const taskList = await taskSchema.find({ userId: req.user.email })
         const filter = { userId: req.user.email, taskName: taskNamereq }
         const update = { taskName: updateTaskName, taskDesc: updateTaskDesc, status: updateTaskStatus }
         const updateData = await taskSchema.findOneAndUpdate(filter, update, { new: true })
         if (!updateData) {
             return res.send({ "error": "Task not found or not updated." });
         }
+        const taskList = await taskSchema.find({ userId: req.user.email })
         res.send(taskList)
 
     } catch (error) {

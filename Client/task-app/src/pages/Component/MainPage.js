@@ -78,10 +78,10 @@ function MainPage() {
         <div className={Style.content_Section_one}>
 
           <div className={Style.Section_one_Heading}>
-            <h1 className={Style.Section_one_Heading_text}>Organize your life with ease: innovative app for smart planning!</h1>
+            <h1 className={Style.Section_one_Heading_text}>Revolutionize your life effortlessly: a cutting-edge app for brilliant planning!</h1>
           </div>
           <div>
-            <button className={Style.getStartedBtn}> Get Started</button>
+            <button onClick={()=>getUserLogin()} className={Style.getStartedBtn}> Get Started</button>
           </div>
           <div className={Style.Section_one_More_Section}>
             <h4 className={Style.Section_one_More_Section_text}>Maximize productivity with an intuitive interface. Seamlessly organize, prioritize, and conquer tasks effortlessly. Welcome to streamlined efficiency, where managing to-dos is a breeze.!</h4>

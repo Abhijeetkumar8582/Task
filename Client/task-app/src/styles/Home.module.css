@@ -36,7 +36,7 @@
   margin: 100px 0px 50px;
 }
 .Section_one_Heading_text {
-  font-size: 54px;
+  font-size: 48px;
 }
 .Section_one_More_Section {
   margin: 100px 0px 0px 0px;
@@ -93,7 +93,7 @@
 }
 .TaskListCard_Status_div {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   margin-top: 10px;
 }
 .status_WIP {
