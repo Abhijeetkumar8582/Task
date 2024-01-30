@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 // import Box from '@mui/material/Box';
-import { toggleSelected } from '../Redux/Action/index.js'
+import { toggleSelected } from '../../Redux/Action/index.js'
 // import { count } from '../Redux/Action/index.js'
 import { useDispatch, useSelector } from "react-redux";
 import InputLabel from '@mui/material/InputLabel';

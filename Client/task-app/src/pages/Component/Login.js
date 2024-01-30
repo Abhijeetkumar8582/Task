@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Style from '@/styles/Login.module.css';
 import Link from 'next/link';
 import { useRouter } from "next/router";
-import { accessToken, userName } from '../Redux/Action/index.js'
+import { accessToken, userName } from '../../Redux/Action/index.js'
 import { useDispatch, useSelector } from "react-redux";
 
 
