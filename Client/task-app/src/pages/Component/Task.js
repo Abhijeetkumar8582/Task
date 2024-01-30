@@ -15,7 +15,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import TaskDescription from './TaskDescHOC.js'
+import TaskDescription from '../../HOC/TaskDescHOC.js'
 import { useRouter } from 'next/router.js';
 
 function Task() {
@@ -252,8 +252,9 @@ function Task() {
             </div>
             <div className={Style.task_Main_div} >
                 {listArr.map((element, i) => (
+                    <div className={Style.task_row_div} key={element.taskName}>
                     <TaskDescription i={i} element={element} taskRowSelected={taskRow_selected} getStatusBoxClass={getStatusBoxClass} Checkbox_ID_Selected={Checkbox_ID_Selected} key = {element.taskName} />
-                ))}
+                    </div> ))}
             </div>
 
             <div>
